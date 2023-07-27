@@ -2,21 +2,23 @@ import React from 'react';
 import {
   MapContainer,
   TileLayer,
-   useMapEvents , GeoJSON
+    GeoJSON
 } from 'react-leaflet';
-
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
 import axios from 'axios';
 import { useState } from 'react';
 import countries from './countries.json';
-import { Card } from 'react-bootstrap';
+
+import CountryCard from './components/CountryCard';
+import MapEvents from './components/MapEvents';
 
 
 const center = [20.5937, 78.9629];
 
 export default function App() {
-  const [selectedCountry, setSelectedCountry] = useState(null)
+  const [search, setSearch] = useState('')
   const [countryInfo, setCountryInfo] = useState({
     name: { common: "India"},
     capital: ["New Delhi"],
@@ -27,37 +29,67 @@ export default function App() {
     flags: {
       svg: "https://flagcdn.com/in.svg",
       png: "https://flagcdn.com/w320/in.png",
-    }
+    },
+    languages: {
+      eng: "English",
+      hin: "Hindi",
+    },
+    currencies: {
+      INR: {
+        name: "Indian rupee",
+        symbol: "₹",
+      },
+    },
+    timezones: [
+      "UTC+05:30"
+    ],
   })
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    axios.get(`https://restcountries.com/v3.1/name/${search}`)
+      .then(res => {
+        console.log(res.data[0])
+        toast.success('Successfully Search!', {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+        setCountryInfo(res.data[0])
+
+      }
+      )
+      .catch(err => toast.error('Search Name is Invalid' ,{
+        position: toast.POSITION.TOP_RIGHT,
+      }))
+
+
+   setSearch("")
+   
+  }
+
+  const handleChange = (event) => {
+    setSearch(event.target.value)
+  }
    const handleCountryClick = (event) => {
     console.log('Country clicked: ', event);
-    // console.log('Country clicked: ', event.target.feature.properties.name);
-    // setSelectedCountry(event.countryInfo.name);
-    setCountryInfo(event.countryInfo)
-    console.log("seleted country", countryInfo.area)
-    
+    setCountryInfo(event.countryInfo)    
   };
   const geoJSONStyle = (feature) => {
-    // console.log(feature, selectedCountry)
     return {
-      fillColor: feature.properties.ADMIN === (countryInfo && countryInfo.name.common) ? 'blue' : 'gray',
+      fillColor: feature.properties.ADMIN === (countryInfo && countryInfo.name.common) ? 'blue' : 'none',
       weight: 2,
       opacity: 1,
       color: 'white',
-      dashArray: '3',
       fillOpacity: 0.7,
     };
   };
   return (
    <>
-   <div className='row'>
-   <h1 className='text-center'>React Leaflet Map</h1>
-      <div className='col-md-8'>
+   <div className='row ' style={{margin:0 , padding:0 }}>
+   <ToastContainer />
+      <div className='col-md-9'>
         <MapContainer
       center={center}
-      zoom={10}
-      style={{ width: '90%', height: '95vh' }}
-
+      zoom={2}
+    style={{ width: '100%', height: '100vh' }}
     >
       <TileLayer
         url="https://api.maptiler.com/maps/basic/256/{z}/{x}/{y}.png?key=61xbrzgnanPiDXlZT0ij"
@@ -79,27 +111,16 @@ export default function App() {
       <MapEvents handleCountryClick={handleCountryClick}  />
     </MapContainer>
       </div>
-      <div className='col-4'>
-        <h2>Country Information</h2>
-        <Card style={{ width: '18rem' }}>
-      <Card.Img variant="top" style={{width:'18rem' , height:'12rem'}} src={countryInfo && countryInfo.flags.svg} />
-      <Card.Body>
-        <Card.Title>India</Card.Title>
-        <Card.Text>
-          <div className='row'>
-            <div className='col-5'>Capital</div>
-            <div className='col-7'>{countryInfo && countryInfo.capital[0]}</div>
-            <div className='col-5'>Population</div>
-            <div className='col-7'>{countryInfo && countryInfo.population}</div>
-            <div className='col-5'>Area</div>
-            <div className='col-7'>{countryInfo &&  countryInfo.area}</div>
-            
+      <div className='col-md-3'>
+
+      <form className="form-inline my-5 text-center" onSubmit={handleSubmit}>
+      <input className="form-control my-3" name="cname" onChange={handleChange} type="search" placeholder="Search Country" aria-label="Search" />
+      <button className="btn btn-primary px-4" type="submit">Search</button>
+    </form>
+    
           
-          </div>
-        </Card.Text>
-        {/* <Button variant="primary">Go somewhere</Button> */}
-      </Card.Body>
-    </Card>
+          <h2 style={{textAlign:"center" , marginTop:"3rem" , marginBottom:"1.5rem"}}>{countryInfo && countryInfo.name.common}</h2>
+       <CountryCard countryInfo={countryInfo} />
         
         
       </div>
@@ -110,33 +131,3 @@ export default function App() {
   );
 }
 
-const MapEvents = ({ handleCountryClick }) => {
-  const map = useMapEvents({
-    click: (e) => {
-      const { lat, lng } = e.latlng;
-      // console.log(lat, lng);
-      
-      axios.get(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`)
-        .then((response) => {
-          const countryName = response.data.address.country;
-          // console.log('Country: ', response.data );
-          
-          axios.get(`https://restcountries.com/v3.1/name/${countryName}?fullText=true`)
-          .then((response) => {
-            console.log('Country information: ', response.data[0]);
-            // localStorage.setItem("countryInfo", JSON.stringify(response.data[0].area))
-            handleCountryClick({ countryInfo: response.data[0] });
-          })
-          .catch((error) => {
-            console.log('Error fetching country information:', error);
-          });
-          // handleCountryClick({ target: { feature: { properties: { name: countryName } } } });
-        })
-        .catch((error) => {
-          console.log('Error fetching country:', error);
-        });
-    },
-  });
-
-  return null;
-};
