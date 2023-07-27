@@ -17,16 +17,30 @@ const center = [20.5937, 78.9629];
 
 export default function App() {
   const [selectedCountry, setSelectedCountry] = useState(null)
-  const [countryInfo, setCountryInfo] = useState(null)
+  const [countryInfo, setCountryInfo] = useState({
+    name: { common: "India"},
+    capital: ["New Delhi"],
+    region: "Asia",
+    subregion: "Southern Asia",
+    population: 1380004385,
+    area: 3287590,
+    flags: {
+      svg: "https://flagcdn.com/in.svg",
+      png: "https://flagcdn.com/w320/in.png",
+    }
+  })
    const handleCountryClick = (event) => {
-    console.log('Country clicked: ', event.target.feature.properties.name);
-    setSelectedCountry(event.target.feature.properties.name);
+    console.log('Country clicked: ', event);
+    // console.log('Country clicked: ', event.target.feature.properties.name);
+    // setSelectedCountry(event.countryInfo.name);
+    setCountryInfo(event.countryInfo)
+    console.log("seleted country", countryInfo.area)
     
   };
   const geoJSONStyle = (feature) => {
-    console.log(feature, selectedCountry)
+    // console.log(feature, selectedCountry)
     return {
-      fillColor: feature.properties.ADMIN === selectedCountry ? 'blue' : 'gray',
+      fillColor: feature.properties.ADMIN === (countryInfo && countryInfo.name.common) ? 'blue' : 'gray',
       weight: 2,
       opacity: 1,
       color: 'white',
@@ -68,21 +82,19 @@ export default function App() {
       <div className='col-4'>
         <h2>Country Information</h2>
         <Card style={{ width: '18rem' }}>
-      <Card.Img variant="top" src="https://flagcdn.com/w320/in.png" />
+      <Card.Img variant="top" style={{width:'18rem' , height:'12rem'}} src={countryInfo && countryInfo.flags.svg} />
       <Card.Body>
         <Card.Title>India</Card.Title>
         <Card.Text>
           <div className='row'>
-            <div className='col-4'>Capital</div>
-            <div className='col-8'>Delhi</div>
-            <div className='col-4'>Capital</div>
-            <div className='col-8'>Delhi</div>
-            <div className='col-4'>Capital</div>
-            <div className='col-8'>Delhi</div>
-            <div className='col-4'>Capital</div>
-            <div className='col-8'>Delhi</div>
-            <div className='col-4'>Capital</div>
-            <div className='col-8'>Delhi</div>
+            <div className='col-5'>Capital</div>
+            <div className='col-7'>{countryInfo && countryInfo.capital[0]}</div>
+            <div className='col-5'>Population</div>
+            <div className='col-7'>{countryInfo && countryInfo.population}</div>
+            <div className='col-5'>Area</div>
+            <div className='col-7'>{countryInfo &&  countryInfo.area}</div>
+            
+          
           </div>
         </Card.Text>
         {/* <Button variant="primary">Go somewhere</Button> */}
@@ -102,23 +114,23 @@ const MapEvents = ({ handleCountryClick }) => {
   const map = useMapEvents({
     click: (e) => {
       const { lat, lng } = e.latlng;
-      console.log(lat, lng);
+      // console.log(lat, lng);
       
       axios.get(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`)
         .then((response) => {
           const countryName = response.data.address.country;
-          console.log('Country: ', response.data );
+          // console.log('Country: ', response.data );
           
           axios.get(`https://restcountries.com/v3.1/name/${countryName}?fullText=true`)
           .then((response) => {
             console.log('Country information: ', response.data[0]);
-            localStorage.setItem("countryInfo", JSON.stringify(response.data[0]))
-            handleCountryClick({ target: { feature: { properties: { name: countryName } } } });
+            // localStorage.setItem("countryInfo", JSON.stringify(response.data[0].area))
+            handleCountryClick({ countryInfo: response.data[0] });
           })
           .catch((error) => {
             console.log('Error fetching country information:', error);
           });
-          handleCountryClick({ target: { feature: { properties: { name: countryName } } } });
+          // handleCountryClick({ target: { feature: { properties: { name: countryName } } } });
         })
         .catch((error) => {
           console.log('Error fetching country:', error);
