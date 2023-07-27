@@ -85,7 +85,7 @@ export default function App() {
    <>
    <div className='row ' style={{margin:0 , padding:0 }}>
    <ToastContainer />
-      <div className='col-md-9'>
+      <div className='col-md-9 col-sm-12'>
         <MapContainer
       center={center}
       zoom={2}
@@ -111,7 +111,7 @@ export default function App() {
       <MapEvents handleCountryClick={handleCountryClick}  />
     </MapContainer>
       </div>
-      <div className='col-md-3'>
+      <div className='col-md-3 col-sm-12'>
 
       <form className="form-inline my-5 text-center" onSubmit={handleSubmit}>
       <input className="form-control my-3" name="cname" onChange={handleChange} type="search" placeholder="Search Country" aria-label="Search" />

@@ -15,7 +15,7 @@ const MapEvents = ({ handleCountryClick }) => {
             
             axios.get(`https://restcountries.com/v3.1/name/${countryName}?fullText=true`)
             .then((response) => {
-              console.log('Country information: ', response.data[0]);
+            //   console.log('Country information: ', response.data[0]);
               // localStorage.setItem("countryInfo", JSON.stringify(response.data[0].area))
               handleCountryClick({ countryInfo: response.data[0] });
             })

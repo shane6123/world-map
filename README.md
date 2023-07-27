@@ -17,7 +17,7 @@ Open [http://localhost:3000](http://localhost:3000) to view the application in t
 
 ## Application Description
 
-This application is a simple world map application that displays the countries of the world on a map. The application uses the [REST Countries API](https://restcountries.eu/) to fetch the data about the countries. The application uses the [React Leaflet](https://react-leaflet.js.org/) library to display the map and the [React Leaflet Search](https://www.npmjs.com/package/react-leaflet-search) library to search for countries on the map. The application also uses the [React Bootstrap](https://react-bootstrap.github.io/) library to style the application. The application is responsive and can be viewed on mobile devices as well. The application is deployed on [Heroku](https://www.heroku.com/) and can be viewed [here](https://world-map-application.herokuapp.com/).
+This application is a simple world map application that displays the countries of the world on a map. The application uses the [REST Countries API](https://restcountries.eu/) to fetch the data about the countries. The application uses the [React Leaflet](https://react-leaflet.js.org/) library to display the map and the [React Leaflet Search](https://www.npmjs.com/package/react-leaflet-search) library to search for countries on the map. The application also uses the [React Bootstrap](https://react-bootstrap.github.io/) library to style the application. The application is responsive and can be viewed on mobile devices as well. The application is deployed on [Vercel](https://www.vercel.com/) and can be viewed [here](https://world-map-azure.vercel.app/).
 
 ## Application Features
 
