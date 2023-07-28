@@ -85,7 +85,7 @@ export default function App() {
    <>
    <div className='row ' style={{margin:0 , padding:0 }}>
    <ToastContainer />
-      <div className='col-md-9 col-sm-12'>
+      <div className='col-lg-8 col-md-8 col-sm-12'>
         <MapContainer
       center={center}
       zoom={2}
@@ -111,15 +111,15 @@ export default function App() {
       <MapEvents handleCountryClick={handleCountryClick}  />
     </MapContainer>
       </div>
-      <div className='col-md-3 col-sm-12'>
+      <div className='col-lg-4 col-md-4 col-sm-12 px-5 '>
 
-      <form className="form-inline my-5 text-center" onSubmit={handleSubmit}>
+      <form className="form-inline my-2 text-center" onSubmit={handleSubmit}>
       <input className="form-control my-3" name="cname" onChange={handleChange} type="search" placeholder="Search Country" aria-label="Search" />
       <button className="btn btn-primary px-4" type="submit">Search</button>
     </form>
     
           
-          <h2 style={{textAlign:"center" , marginTop:"3rem" , marginBottom:"1.5rem"}}>{countryInfo && countryInfo.name.common}</h2>
+          <h2 style={{textAlign:"center" , marginTop:"1rem" , marginBottom:"1rem"}}>{countryInfo && countryInfo.name.common}</h2>
        <CountryCard countryInfo={countryInfo} />
         
         

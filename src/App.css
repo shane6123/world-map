@@ -43,24 +43,24 @@
 .bold-text {
   font-weight: bold;
   font-size:  1rem;
-  padding: 0.5rem;
+  padding: 0.3rem;
 
 }
 
 .normal-text {
   font-weight: normal;
   font-size:  1rem;
-  padding: 0.5rem;
+  padding: 0.3rem;
 
 }
 
 .lang{
   font-size: 1rem;
-  padding: 0.5rem;
-  padding-top: 0.2rem;
-  padding-bottom: 0.2rem;
+  padding: 0.3rem;
+  /* padding-top: 0.2rem;
+  padding-bottom: 0.2rem; */
   background-color: lawngreen;
   border-radius: 5px;
-  margin-left:0.5rem ;
+  margin:0.3rem ;
 }
 
